@@ -6,8 +6,10 @@ defmodule Filesync.Sync do
   @doc """
   Overwrites `path` with contents of remote `file`.
   """
-  def sync(file, path) do
-    contents = IO.read(file)
-    IO.puts("sync '#{path}': #{inspect(contents)}")
+  def sync(remote, file) do
+    {:ok, contents} = :rpc.call(remote, File, :read, [file])
+    File.mkdir_p!(Path.dirname(file))
+    File.write!(file, contents)
+    {:ok, file}
   end
 end

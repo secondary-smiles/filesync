@@ -47,8 +47,7 @@ defmodule Filesync.Node do
   end
 
   def handle_cast({:sync_file, file}, {local, remote} = state) do
-    pid = File.open!(file)
-    send(remote, {:sync_file, local, pid, file})
+    send(remote, {:sync_file, local, Node.self(), file})
     {:noreply, state}
   end
 

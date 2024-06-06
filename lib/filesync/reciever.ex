@@ -7,8 +7,8 @@ defmodule Filesync.Receiver do
       {:check_files, remote, files} ->
         send(remote, {:files_check, Filesync.File.check_files(files)})
 
-      {:sync_file, remote, file, path} ->
-        send(remote, {:file_sync, Filesync.Sync.sync(file, path)})
+      {:sync_file, remote, name, file} ->
+        send(remote, {:file_sync, Filesync.Sync.sync(name, file)})
 
       {:files_check, files} ->
         IO.puts(inspect(files))
