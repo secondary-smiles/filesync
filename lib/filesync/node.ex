@@ -8,6 +8,13 @@ defmodule Filesync.Node do
     GenServer.start_link(__MODULE__, {remote_host, cookie}, name: __MODULE__)
   end
 
+  @doc """
+  Initiate a sync between the local and remote node for `files`.
+  """
+  def sync(s, files) do
+    GenServer.cast(s, {:check_files, files})
+  end
+
   @impl true
   def init({remote_host, cookie}) do
     Node.set_cookie(cookie)
