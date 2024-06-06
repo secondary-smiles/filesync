@@ -10,8 +10,10 @@ defmodule Filesync.Receiver do
       {:sync_file, remote, name, file} ->
         send(remote, {:file_sync, Filesync.Sync.sync(name, file)})
 
-      {:files_check, files} ->
-        IO.puts(inspect(files))
+      {:files_check, {:ok, files}} ->
+        Enum.map(files, fn file ->
+          Filesync.Node.sync_file(Filesync.Node, file)
+        end)
 
       {:file_sync, msg} ->
         IO.puts(inspect(msg))
