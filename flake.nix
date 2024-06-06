@@ -15,7 +15,11 @@
           buildInputs = with pkgs; [
             elixir
             elixir-ls
+            inotify-tools
           ];
+          FILESYNC_LOCAL="user@127.0.0.1";
+          FILESYNC_LOCATION="/home/user/playground/";
+          FILESYNC_COOKIE="cookie";
           shellHook = ''
             exec zsh
           '';

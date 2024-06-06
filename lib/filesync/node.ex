@@ -4,8 +4,8 @@ defmodule Filesync.Node do
   @doc """
   Start the `Filesync.Node` `GenServer`.
   """
-  def start_link(remote_host, cookie) do
-    GenServer.start_link(__MODULE__, {remote_host, cookie}, name: __MODULE__)
+  def start_link(opts) do
+    GenServer.start_link(__MODULE__, opts, name: __MODULE__)
   end
 
   @doc """

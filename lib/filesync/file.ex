@@ -40,7 +40,7 @@ defmodule Filesync.File do
     end
   end
 
-  defp checksum(file) do
+  def checksum(file) do
     hasher = :crypto.hash_init(:sha256)
 
     File.stream!(file)
