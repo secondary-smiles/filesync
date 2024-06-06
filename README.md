@@ -1,21 +1,30 @@
 # Filesync
 
-**TODO: Add description**
+Stupid little tool that syncs files in a directory between two computers. I wrote this to explore the Elixir programming language, so the code is awful and the end-product barely functions.
 
-## Installation
+## To run:
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `filesync` to your list of dependencies in `mix.exs`:
+```bash
+# Edit flake.nix to customize the local user, sync location and cookie
+$EDITOR flake.nix
 
-```elixir
-def deps do
-  [
-    {:filesync, "~> 0.1.0"}
-  ]
-end
+# Start the dev environment
+nix develop 
+
+# Start the repl
+iex -S mix
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/filesync>.
+Now, setup the program:
 
+```bash
+iex> Filesync.Node.start_link({:"user@remote", :cookie})
+```
+
+Now, go to your sync folder and try using `touch` and `echo` to make some files:
+```bash
+touch new_file
+echo "sync me!" > another_file
+```
+
+Hopefully they should show up on the other machine as well!
