@@ -15,6 +15,10 @@ defmodule Filesync.Node do
     GenServer.cast(s, {:check_files, files})
   end
 
+  def sync_file(s, file) do
+    GenServer.cast(s, {:sync_file, file})
+  end
+
   @impl true
   def init({remote_host, cookie}) do
     Node.set_cookie(cookie)
@@ -25,10 +29,10 @@ defmodule Filesync.Node do
 
     Node.monitor(remote_host, true)
 
-    listener = Node.spawn_link(remote_host, fn -> Filesync.Receiver.listen() end)
-    {:ok, local_listener} = Task.start_link(fn -> Filesync.Receiver.listen() end)
+    {:ok, local} = Task.start_link(fn -> Filesync.Receiver.listen() end)
+    remote = Node.spawn_link(remote_host, fn -> Filesync.Receiver.listen() end)
 
-    {:ok, {local_listener, listener}}
+    {:ok, {local, remote}}
   end
 
   @impl true
@@ -42,10 +46,16 @@ defmodule Filesync.Node do
     {:noreply, state}
   end
 
-  def handle_cast(msg, {local, remote} = state) do
-    send(remote, {msg, local})
+  def handle_cast({:sync_file, file}, {local, remote} = state) do
+    pid = File.open!(file)
+    send(remote, {:sync_file, local, pid, file})
     {:noreply, state}
   end
+
+  # def handle_cast(msg, {local, remote} = state) do
+  #   send(remote, {msg, local})
+  #   {:noreply, state}
+  # end
 
   @impl true
   def handle_info({:nodedown, node}, state) do
